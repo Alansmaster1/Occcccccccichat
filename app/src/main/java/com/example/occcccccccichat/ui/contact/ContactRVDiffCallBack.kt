@@ -25,6 +25,6 @@ class ContactRVDiffCallBack(
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return _oldList[oldItemPosition].Name == _newList[newItemPosition].Name
+        return _oldList[oldItemPosition].name == _newList[newItemPosition].name
     }
 }

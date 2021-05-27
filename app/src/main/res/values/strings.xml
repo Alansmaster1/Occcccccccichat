@@ -19,4 +19,10 @@
     <string name="nickname">NICKNAME</string>
     <string name="chat">Chat</string>
     <string name="modify">Modify</string>
+    <string name="default_name">Default_Name</string>
+    <string name="default_nickname">Default_Nickname</string>
+    <string name="id">ID</string>
+    <string name="default_id">Default_ID</string>
+    <string name="save">SAVE</string>
+    <string name="content">CONTENT</string>
 </resources>

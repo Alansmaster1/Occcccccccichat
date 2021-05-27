@@ -1,42 +1,34 @@
-package com.example.occcccccccichat.ui.contact
+package com.example.occcccccccichat.ui.chat
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.occcccccccichat.R
-import com.example.occcccccccichat.data.model.ContactItem
+import com.example.occcccccccichat.data.model.ChatMsgItem
 
-class ContactRVAdapter(private val _dataSet: LiveData<List<ContactItem>>)
-    : RecyclerView.Adapter<ContactRVAdapter.ViewHolder>() {
+class ChatRVAdapter(private val _dataSet: LiveData<List<ChatMsgItem>>)
+    :RecyclerView.Adapter<ChatRVAdapter.ViewHolder>() {
 
-    private var itemClickListener: ViewHolder.ItemClickListener? = null
     private var itemLongClickListener: ViewHolder.ItemLongClickListener? = null
 
-    class ViewHolder(view: View, clickListener: ItemClickListener?, longClickListener: ItemLongClickListener?):
-            RecyclerView.ViewHolder(view),View.OnClickListener,View.OnLongClickListener {
+    class ViewHolder(view: View, longClickListener: ItemLongClickListener?):
+        RecyclerView.ViewHolder(view), View.OnLongClickListener {
 
-        val textView: TextView = view.findViewById(R.id.name_item_contact)
-        var mItemClickListener: ItemClickListener? = clickListener
+        val contentTextView: TextView = view.findViewById(R.id.content_TextView)
+        val op_avatar = view.findViewById<ImageView>(R.id.op_avatar)
+        val self_avatar = view.findViewById<ImageView>(R.id.self_avatar)
         var mItemLongClickListener: ItemLongClickListener? = longClickListener
 
         init{
-            view.setOnClickListener(this)
             view.setOnLongClickListener(this)
-        }
-
-        fun interface ItemClickListener{
-            fun onItemClick(layoutPosition: Int)
         }
 
         fun interface ItemLongClickListener{
             fun onItemLongClick(layoutPosition:Int)
-        }
-
-        override fun onClick(view: View) {
-            mItemClickListener?.onItemClick(layoutPosition)
         }
 
         override fun onLongClick(view: View): Boolean {
@@ -48,13 +40,13 @@ class ContactRVAdapter(private val _dataSet: LiveData<List<ContactItem>>)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_contact,parent,false)
+            .inflate(R.layout.item_chat_msg,parent,false)
 
-        return ViewHolder(view,itemClickListener,itemLongClickListener)
+        return ViewHolder(view,itemLongClickListener)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.textView.text = _dataSet.value?.get(position)?.nickname ?: ""
+        holder.contentTextView.text = _dataSet.value?.get(position)?.content ?: "ERROR_MSG"
     }
 
     override fun getItemCount(): Int {
@@ -62,10 +54,6 @@ class ContactRVAdapter(private val _dataSet: LiveData<List<ContactItem>>)
             return size
         }
         return 0
-    }
-
-    fun setOnClickListener(listener: ViewHolder.ItemClickListener){
-        itemClickListener = listener
     }
 
     fun setOnLongClickListener(listener: ViewHolder.ItemLongClickListener) {

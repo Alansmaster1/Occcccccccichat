@@ -4,32 +4,41 @@ import androidx.annotation.ArrayRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.example.occcccccccichat.Tool.LogUtil
 import com.example.occcccccccichat.data.dao.ContactItemDao
 import com.example.occcccccccichat.data.database.AppDatabase
 import com.example.occcccccccichat.data.model.ContactItem
+import com.example.occcccccccichat.data.repository.ContactItemListRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlin.concurrent.thread
 
 class ContactViewModel : ViewModel() {
-
-//    val contactItemArrayList: ArrayList<ContactItem> = ArrayList()
-//    val bkContactItemArrayList: ArrayList<ContactItem> = ArrayList()
-
-    val contactItemDao = AppDatabase.getDatabase().contactItemDao()
-    val contactItemList: LiveData<List<ContactItem>> = contactItemDao.queryAllItem()
-
-    fun insert(item : ContactItem){
-        contactItemDao.insertItem(item)
+    val repository = ContactItemListRepository()
+    init{
+        repository.pagingDataList.cachedIn(viewModelScope)
     }
 
-    fun update(item : ContactItem){
-        contactItemDao.updateItem(item)
+    fun insert(item: ContactItem) {
+        thread() {
+            viewModelScope.launch {
+                repository.insert(item)
+            }
+        }
     }
 
-    fun delete(item : ContactItem){
-        contactItemDao.deleteItem(item)
+    fun getItem(id:Long, item: MutableLiveData<ContactItem>) {
+        viewModelScope.launch {
+            item.postValue(repository.query(id))
+        }
     }
 
-    fun deleteAll(){
-         contactItemDao.deleteAllItem()
+    fun updateItem(item:ContactItem){
+        viewModelScope.launch {
+            repository.update(item)
+        }
     }
 }

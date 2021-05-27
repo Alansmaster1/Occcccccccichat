@@ -1,5 +1,6 @@
 package com.example.occcccccccichat.ui.contact
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,13 +15,16 @@ import com.example.occcccccccichat.R
 import com.example.occcccccccichat.Tool.LogUtil
 import com.example.occcccccccichat.Tool.MyApplication
 import com.example.occcccccccichat.data.model.ContactItem
-import kotlinx.android.synthetic.main.fragment_contact.view.*
+import com.example.occcccccccichat.databinding.FragmentContactBinding
+import com.example.occcccccccichat.ui.chat.ChatActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlin.concurrent.thread
 
 class ContactFragment : Fragment() {
 
-    private lateinit var _contactViewModel: ContactViewModel
-    private lateinit var _contactRVAdapter: ContactRVAdapter
+    private lateinit var viewModel: ContactViewModel
+    private lateinit var RVAdapter: ContactRVAdapter
+    private lateinit var binding: FragmentContactBinding
 
     var _cnt = 0
 
@@ -28,23 +32,22 @@ class ContactFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _contactViewModel =
+    ): View {
+        viewModel =
             ViewModelProvider(this).get(ContactViewModel::class.java)
 
-        val root = inflater.inflate(R.layout.fragment_contact, container, false)
+        binding = FragmentContactBinding.inflate(inflater,container,false)
 
-        _contactViewModel.contactItemList.observe(viewLifecycleOwner, Observer {
-            _contactRVAdapter.notifyDataSetChanged()
+        viewModel.repository.contactItemList.observe(viewLifecycleOwner,  {
+            RVAdapter.notifyDataSetChanged()
         })
 
-        root.btn_add_item_contact.setOnClickListener {
-            thread {
-                _contactViewModel.insert(ContactItem("Alan${_cnt++}"))
-                LogUtil.d("Debug","Add Item to Contact RV List")
-            }
+        binding.btnAddItemContact.setOnClickListener{
+            viewModel.insert(ContactItem("Alan ${_cnt++}"))
+            LogUtil.d("Debug","Add an item to Contact RV")
         }
-        return root
+
+        return binding.root
     }
 
     override fun onResume() {
@@ -58,19 +61,34 @@ class ContactFragment : Fragment() {
         val dividerItemDecoration = DividerItemDecoration(MyApplication.context,DividerItemDecoration.VERTICAL)
         linearLayoutManager.orientation = RecyclerView.VERTICAL
 
-        val recyclerView: RecyclerView? = view?.findViewById(R.id.recyclerview_contact)
-        recyclerView?.apply {
+        binding.recyclerviewContact.apply {
             addItemDecoration(dividerItemDecoration)
             setHasFixedSize(true)
-            adapter = _contactRVAdapter
+            adapter = RVAdapter
             layoutManager = linearLayoutManager
             LogUtil.d("Debug","Init RecyclerView in Contact Fragment")
         }
     }
 
     private fun initAdapter(){
-        _contactRVAdapter = ContactRVAdapter(_contactViewModel.contactItemList)
+        RVAdapter = ContactRVAdapter(viewModel.repository.contactItemList)
+        RVAdapter.run {
+            setOnClickListener(ContactRVAdapter.ViewHolder.ItemClickListener{ layoutPosition: Int ->
+                LogUtil.d("Debug","Item is clicked")
+                //TODO: Start the Chat Activity
+                val intent = Intent(activity,ChatActivity::class.java)
+                intent.putExtra("ID",viewModel.repository.contactItemList.value?.get(layoutPosition)?.id)
+                startActivity(intent)
+            })
 
+            setOnLongClickListener(ContactRVAdapter.ViewHolder.ItemLongClickListener {  layoutPosition ->
+                LogUtil.d("Debug","Item is long clicked")
+                //Start the Modify Activity
+                val intent = Intent(activity,ContactEditActivity::class.java)
+                intent.putExtra("ID",viewModel.repository.contactItemList.value?.get(layoutPosition)?.id)
+                startActivity(intent)
+            })
+        }
         LogUtil.d("Debug","Init Adapter for Contact RV List")
     }
 }

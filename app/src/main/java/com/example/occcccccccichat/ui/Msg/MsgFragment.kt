@@ -4,17 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.occcccccccichat.R
-import com.example.occcccccccichat.Tool.LogUtil
-import com.example.occcccccccichat.Tool.MyApplication
 import com.example.occcccccccichat.databinding.FragmentMsgBinding
-import kotlinx.android.synthetic.main.fragment_msg.view.*
 
 class MsgFragment : Fragment() {
 
@@ -49,9 +43,6 @@ class MsgFragment : Fragment() {
 //            LogUtil.d("Debug","plus one")
 //        }
 
-        binding.root.btn_change_textView.setOnClickListener{
-
-        }
 
         return binding.root
     }
