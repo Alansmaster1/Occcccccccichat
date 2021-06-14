@@ -11,7 +11,7 @@ import com.example.occcccccccichat.data.model.ChatMsgItem
 import com.example.occcccccccichat.data.model.ContactItem
 import com.example.occcccccccichat.data.model.MsgItem
 
-@Database(version =4, entities = [MsgItem::class, ContactItem::class, ChatMsgItem::class])
+@Database(version =5, entities = [MsgItem::class, ContactItem::class, ChatMsgItem::class])
 abstract class AppDatabase : RoomDatabase() {
     abstract fun msgItemDao(): MsgItemDao
     abstract fun contactItemDao(): ContactItemDao

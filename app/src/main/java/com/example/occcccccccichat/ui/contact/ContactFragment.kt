@@ -43,8 +43,9 @@ class ContactFragment : Fragment() {
         })
 
         binding.btnAddItemContact.setOnClickListener{
-            viewModel.insert(ContactItem("Alan ${_cnt++}"))
             LogUtil.d("Debug","Add an item to Contact RV")
+            val intent = Intent(activity,ContactEditActivity::class.java)
+            startActivity(intent)
         }
 
         return binding.root

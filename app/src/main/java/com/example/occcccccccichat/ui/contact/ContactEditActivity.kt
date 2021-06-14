@@ -22,23 +22,31 @@ class ContactEditActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityContactEditBinding.inflate(layoutInflater)
         setContentView(binding.root)
+    }
 
-        val id = intent.getLongExtra("ID",0)
-        LogUtil.d("Debug","ID is $id.")
-
+    fun accessInfo(id : Long): MutableLiveData<ContactItem>{
         val item: MutableLiveData<ContactItem> = MutableLiveData()
-
         viewModel.getItem(id,item)
         item.observe(this, Observer {
             binding.nameTextView.text = item.value?.name
             binding.nicknameEditText.setText(item.value?.nickname)
             binding.idTextView.text = item.value?.id.toString()
         })
+        return item
+    }
 
-        binding.saveBtn.setOnClickListener{
-            item.value?.run {
-                nickname = binding.nicknameEditText.text.toString()
-                viewModel.updateItem(this)
+    fun operationTypeCheck(){
+        val id: Long = intent.getLongExtra("ID",-1);
+        if(id==-1L){
+            binding.saveBtn.setOnClickListener {
+                val item: ContactItem = ContactItem(binding.nameTextView.text as String)
+                item.nickname = binding.nicknameEditText.text.toString()
+                viewModel.insert(item)
+            }
+        } else {
+            val item: MutableLiveData<ContactItem> = accessInfo(id)
+            binding.saveBtn.setOnClickListener{
+                item.value?.let { it1 -> viewModel.updateItem(it1) }
             }
         }
     }

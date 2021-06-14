@@ -18,9 +18,6 @@ import kotlin.concurrent.thread
 
 class ContactViewModel : ViewModel() {
     val repository = ContactItemListRepository()
-    init{
-        repository.pagingDataList.cachedIn(viewModelScope)
-    }
 
     fun insert(item: ContactItem) {
         thread() {

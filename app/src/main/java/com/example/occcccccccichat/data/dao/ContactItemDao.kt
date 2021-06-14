@@ -24,9 +24,6 @@ interface ContactItemDao {
     @Query("select * from ContactItem")
     fun queryAllItem(): LiveData<List<ContactItem>>
 
-    @Query("select * from ContactItem")
-    fun queryAllItemForPaging():PagingSource<Int,ContactItem>
-
     @Query("delete from ContactItem")
     fun deleteAllItem()
 }
