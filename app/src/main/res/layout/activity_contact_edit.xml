@@ -32,19 +32,21 @@
         app:layout_constraintTop_toBottomOf="@id/avatar_imageView"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
+    <EditText
         android:id="@+id/name_TextView"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        
-        android:hint="@string/default_name"
+
+        android:autofillHints="@string/name"
+        android:inputType="textPersonName"
         android:textSize="25sp"
         android:gravity="center"
         
         android:layout_marginTop="20dp"
         android:layout_marginStart="10dp"
         app:layout_constraintStart_toEndOf="@id/name_Label"
-        app:layout_constraintTop_toBottomOf="@id/avatar_imageView" />
+        app:layout_constraintTop_toBottomOf="@id/avatar_imageView"
+        tools:ignore="LabelFor" />
     
     <TextView
         android:id="@+id/nickname_Label"

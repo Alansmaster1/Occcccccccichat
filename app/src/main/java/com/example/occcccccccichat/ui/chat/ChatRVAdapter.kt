@@ -9,8 +9,9 @@ import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.occcccccccichat.R
 import com.example.occcccccccichat.data.model.ChatMsgItem
+import com.example.occcccccccichat.data.model.MessageBean
 
-class ChatRVAdapter(private val _dataSet: LiveData<List<ChatMsgItem>>)
+class ChatRVAdapter(private val _dataSet: List<MessageBean>)
     :RecyclerView.Adapter<ChatRVAdapter.ViewHolder>() {
 
     private var itemLongClickListener: ViewHolder.ItemLongClickListener? = null
@@ -46,14 +47,11 @@ class ChatRVAdapter(private val _dataSet: LiveData<List<ChatMsgItem>>)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.contentTextView.text = _dataSet.value?.get(position)?.content ?: "ERROR_MSG"
+        holder.contentTextView.text = _dataSet.get(position).msg
     }
 
     override fun getItemCount(): Int {
-        _dataSet.value?.apply {
-            return size
-        }
-        return 0
+        return _dataSet.size
     }
 
     fun setOnLongClickListener(listener: ViewHolder.ItemLongClickListener) {

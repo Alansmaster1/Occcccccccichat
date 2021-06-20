@@ -21,32 +21,41 @@ class ContactEditActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityContactEditBinding.inflate(layoutInflater)
+        operationTypeCheck()
         setContentView(binding.root)
     }
 
-    fun accessInfo(id : Long): MutableLiveData<ContactItem>{
+    private fun accessInfo(id : Long): MutableLiveData<ContactItem>{
         val item: MutableLiveData<ContactItem> = MutableLiveData()
         viewModel.getItem(id,item)
         item.observe(this, Observer {
-            binding.nameTextView.text = item.value?.name
+            binding.nameTextView.setText(item.value?.name)
             binding.nicknameEditText.setText(item.value?.nickname)
             binding.idTextView.text = item.value?.id.toString()
         })
         return item
     }
 
-    fun operationTypeCheck(){
-        val id: Long = intent.getLongExtra("ID",-1);
+    private fun operationTypeCheck(){
+        val id: Long = intent.getLongExtra("targetId",-1);
         if(id==-1L){
+            binding.nameTextView.isEnabled = true
+            binding.idTextView.visibility = View.INVISIBLE
+            binding.idLabel.visibility = View.INVISIBLE
             binding.saveBtn.setOnClickListener {
-                val item: ContactItem = ContactItem(binding.nameTextView.text as String)
+                val item = ContactItem(binding.nameTextView.text.toString())
                 item.nickname = binding.nicknameEditText.text.toString()
                 viewModel.insert(item)
+                finish()
             }
         } else {
             val item: MutableLiveData<ContactItem> = accessInfo(id)
+            binding.nameTextView.isEnabled = false
+            binding.idTextView.visibility = View.VISIBLE
+            binding.idLabel.visibility = View.VISIBLE
             binding.saveBtn.setOnClickListener{
                 item.value?.let { it1 -> viewModel.updateItem(it1) }
+                finish()
             }
         }
     }

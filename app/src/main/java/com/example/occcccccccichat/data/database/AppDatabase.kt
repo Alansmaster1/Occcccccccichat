@@ -3,19 +3,24 @@ package com.example.occcccccccichat.data.database
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.occcccccccichat.Tool.AEvent
+import com.example.occcccccccichat.Tool.AEvent.AEVENT_RESET
+import com.example.occcccccccichat.Tool.IEventListener
 import com.example.occcccccccichat.Tool.MyApplication
-import com.example.occcccccccichat.data.dao.ChatMsgItemDao
-import com.example.occcccccccichat.data.dao.ContactItemDao
-import com.example.occcccccccichat.data.dao.MsgItemDao
-import com.example.occcccccccichat.data.model.ChatMsgItem
-import com.example.occcccccccichat.data.model.ContactItem
-import com.example.occcccccccichat.data.model.MsgItem
+import com.example.occcccccccichat.data.dao.*
+import com.example.occcccccccichat.data.model.*
+import java.util.*
 
-@Database(version =5, entities = [MsgItem::class, ContactItem::class, ChatMsgItem::class])
-abstract class AppDatabase : RoomDatabase() {
+@Database(version =6, entities = [MsgItem::class, ContactItem::class, ChatMsgItem::class,MessageBean::class,HistoryBean::class])
+abstract class AppDatabase : RoomDatabase(){
     abstract fun msgItemDao(): MsgItemDao
     abstract fun contactItemDao(): ContactItemDao
     abstract fun chatMsgItemDao(): ChatMsgItemDao
+    abstract fun messageDao(): MessageDao
+    abstract fun historyDao(): HistoryDao
+
+    val HISTORY_TYPE_C2C:String = "c2c"
+    val HISTORY_TYPE_GROUP:String = "group"
 
     companion object{
         private var instance: AppDatabase? = null
@@ -35,4 +40,5 @@ abstract class AppDatabase : RoomDatabase() {
                     }
         }
     }
+    //原本要实现IEventListener接口中的方法_用于在触发AEVENT_RESET事件时关闭数据库
 }
