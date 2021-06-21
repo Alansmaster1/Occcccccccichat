@@ -18,93 +18,108 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <TextView
-        android:id="@+id/name_Label"
-        android:layout_width="150dp"
+    <LinearLayout
+        android:id="@+id/area_name"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:text="@string/name"
-        android:textSize="25sp"
-        android:gravity="center"
-
+        android:orientation="horizontal"
         android:layout_marginTop="20dp"
-        android:layout_marginStart="30dp"
-        app:layout_constraintTop_toBottomOf="@id/avatar_imageView"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/avatar_imageView">
 
-    <EditText
-        android:id="@+id/name_TextView"
-        android:layout_width="200dp"
+        <TextView
+            android:id="@+id/name_Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+
+            android:text="@string/name"
+            android:textSize="18sp"
+            android:gravity="center" />
+
+        <EditText
+            android:id="@+id/name_TextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+
+            android:autofillHints="@string/name"
+            android:inputType="textPersonName"
+            android:textSize="18sp"
+            android:gravity="center"
+
+            tools:ignore="LabelFor" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/area_nickname"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:autofillHints="@string/name"
-        android:inputType="textPersonName"
-        android:textSize="25sp"
-        android:gravity="center"
-        
+        android:orientation="horizontal"
         android:layout_marginTop="20dp"
-        android:layout_marginStart="10dp"
-        app:layout_constraintStart_toEndOf="@id/name_Label"
-        app:layout_constraintTop_toBottomOf="@id/avatar_imageView"
-        tools:ignore="LabelFor" />
+        app:layout_constraintTop_toBottomOf="@id/area_name">
+
+        <TextView
+            android:id="@+id/nickname_Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+
+            android:text="@string/nickname"
+            android:textSize="18sp"
+            android:gravity="center" />
+
+        <EditText
+            android:id="@+id/nickname_EditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+
+            android:autofillHints="@string/default_nickname"
+            android:inputType="textPersonName"
+            android:textSize="18sp"
+            android:gravity="center"
+
+            tools:ignore="LabelFor" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/area_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/area_nickname">
+
+        <TextView
+            android:id="@+id/id_Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+
+            android:text="@string/id"
+            android:textSize="18sp"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/id_TextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+
+            android:text="@string/default_id"
+            android:textSize="18sp"
+            android:gravity="center" />
+
+    </LinearLayout>
+
     
-    <TextView
-        android:id="@+id/nickname_Label"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
+    
 
-        android:text="@string/nickname"
-        android:textSize="25sp"
-        android:gravity="center"
 
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="30dp"
-        app:layout_constraintTop_toBottomOf="@id/name_Label"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <EditText
-        android:id="@+id/nickname_EditText"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-
-        android:autofillHints="@string/default_nickname"
-        android:inputType="textPersonName"
-        android:textSize="15sp"
-        android:gravity="center"
-
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="10dp"
-        app:layout_constraintTop_toBottomOf="@id/name_TextView"
-        app:layout_constraintStart_toEndOf="@id/nickname_Label"
-        tools:ignore="LabelFor" />
-
-    <TextView
-        android:id="@+id/id_Label"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-
-        android:text="@string/id"
-        android:textSize="25sp"
-        android:gravity="center"
-
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="30dp"
-        app:layout_constraintTop_toBottomOf="@id/nickname_Label"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/id_TextView"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-
-        android:text="@string/default_id"
-        android:textSize="25sp"
-        android:gravity="center"
-
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="30dp"
-        app:layout_constraintTop_toBottomOf="@id/nickname_EditText"
-        app:layout_constraintStart_toEndOf="@id/id_Label" />
 
     <Button
         android:id="@+id/save_btn"
@@ -116,7 +131,7 @@
 
         android:layout_marginTop="100dp"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintTop_toBottomOf="@id/id_Label"
+        app:layout_constraintTop_toBottomOf="@id/area_id"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 

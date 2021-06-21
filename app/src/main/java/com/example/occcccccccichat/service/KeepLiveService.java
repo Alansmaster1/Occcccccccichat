@@ -44,7 +44,8 @@ public class KeepLiveService extends Service implements IEventListener {
     }
 
     private void initSDK(){
-        MLOC.init(this);
+        //TODO:MLOC.init在Launch中被调用
+        //MLOC.init(this);
         initFree();
     }
 
@@ -56,12 +57,18 @@ public class KeepLiveService extends Service implements IEventListener {
         isLogin = XHClient.getInstance().getIsOnline();
         LogUtil.INSTANCE.d("Debug",XHClient.getInstance().getIsOnline() + " KeepLiveServer");
         if(!isLogin){
-            if(MLOC.userId.equals("")){
-                MLOC.userId = "" + (new Random().nextInt(900000)+100000);
+//            if(MLOC.userId.equals("")){
+//                MLOC.userId = "" + (new Random().nextInt(900000)+100000);
+//                MLOC.saveUserId(MLOC.userId);
+//                MLOC.saveUserState(MLOC.userState);
+//            }
+            //当userState == logout 进入 KeepLiveService时,说明是从登录进来的
+            if(MLOC.userState.equals("logout")){
+                MLOC.userState = "login";
                 MLOC.saveUserId(MLOC.userId);
-                //TODO:暂时写在这占位置,需要修改
                 MLOC.saveUserState(MLOC.userState);
             }
+
             addListener();
 
             XHCustomConfig customConfig = XHCustomConfig.getInstance(this);

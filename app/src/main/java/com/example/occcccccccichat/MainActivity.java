@@ -8,18 +8,23 @@ import android.widget.TextView;
 
 import com.example.occcccccccichat.Tool.LogUtil;
 import com.example.occcccccccichat.Tool.MLOC;
+import com.example.occcccccccichat.Tool.MyApplication;
+import com.example.occcccccccichat.databinding.ActivityMainBinding;
 import com.example.occcccccccichat.ui.Msg.MsgActivity;
 import com.example.occcccccccichat.ui.contact.ContactActivity;
+import com.example.occcccccccichat.ui.login.LoginActivity;
 import com.starrtc.starrtcsdk.api.XHClient;
 import com.starrtc.starrtcsdk.apiInterface.IXHResultCallback;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity{
     private boolean isOnline = false;
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 //        BottomNavigationView navView = findViewById(R.id.nav_view);
 //        NavController navController = ActivityKt.findNavController(this,R.id.nav_host_fragment);
 //        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
@@ -28,18 +33,28 @@ public class MainActivity extends BaseActivity {
 //        NavigationUI.setupActionBarWithNavController(this,navController,appBarConfiguration);
 //        NavigationUI.setupWithNavController(navView,navController);
 
-        ((TextView)findViewById(R.id.userinfo_id)).setText(MLOC.userId);
-        findViewById(R.id.btn_chatList).setOnClickListener(new View.OnClickListener() {
+        ((TextView)binding.userinfoId).setText(MLOC.userId);
+        binding.btnChatList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this,MsgActivity.class));
             }
         });
 
-        findViewById(R.id.btn_contacts).setOnClickListener(new View.OnClickListener() {
+        binding.btnContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, ContactActivity.class));
+            }
+        });
+
+        binding.btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MLOC.userState = "logout";
+                MLOC.saveUserState(MLOC.userState);
+                startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                finish();
             }
         });
 
@@ -80,16 +95,12 @@ public class MainActivity extends BaseActivity {
             return;
         }
         if(MLOC.userId == null){
-            startActivity(new Intent(MainActivity.this,LauchActivity.class));
+            startActivity(new Intent(MainActivity.this, LaunchActivity.class));
             finish();
         }
-        if(findViewById(R.id.btn_chatList)!=null){
-            findViewById(R.id.btn_chatList).setBackgroundColor(MLOC.hasNewC2CMsg||MLOC.hasNewGroupMsg? Color.RED:Color.BLUE);
-        }
+        binding.btnChatList.setBackgroundColor(MLOC.hasNewC2CMsg||MLOC.hasNewGroupMsg? Color.RED:Color.BLUE);
         isOnline = XHClient.getInstance().getIsOnline();
-        if(findViewById(R.id.loading)!=null){
-            findViewById(R.id.loading).setVisibility(XHClient.getInstance().getIsOnline()?View.INVISIBLE:View.VISIBLE);
-        }
+        binding.loading.setVisibility(XHClient.getInstance().getIsOnline()?View.INVISIBLE:View.VISIBLE);
 
         //findViewById(R.id.c2c_new).setVisibility(MLOC.hasNewC2CMsg? View.VISIBLE:View.INVISIBLE);
         //findViewById(R.id.group_new).setVisibility(MLOC.hasNewGroupMsg? View.VISIBLE:View.INVISIBLE);

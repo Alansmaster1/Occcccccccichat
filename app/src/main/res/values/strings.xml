@@ -105,4 +105,7 @@
     <string name="passwd">passwd</string>
     <string name="signup">signup</string>
     <string name="password_repeat">Repeat</string>
+    <string name="notice">注意</string>
+    <string name="cancel">取消</string>
+    <string name="go">GO</string>
 </resources>

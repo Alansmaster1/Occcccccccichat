@@ -91,7 +91,8 @@ public class MLOC {
     private static MessageDao messageDao = null;
 
     public static void init(Context context){
-        appContext = context.getApplicationContext();
+        //appContext = context.getApplicationContext();
+        appContext = MyApplication.context;
         if(historyDao==null){
             historyDao =  AppDatabase.Companion.getDatabase().historyDao();
         }

@@ -26,7 +26,6 @@ public class ContactActivity extends AppCompatActivity {
     private ContactRVAdapter adapter;
     private ActivityContactBinding binding;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +39,7 @@ public class ContactActivity extends AppCompatActivity {
         binding.btnAddItemContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ContactActivity.this,ContactEditActivity.class));
+                startActivity(new Intent(ContactActivity.this,ContactAddActivity.class));
             }
         });
 

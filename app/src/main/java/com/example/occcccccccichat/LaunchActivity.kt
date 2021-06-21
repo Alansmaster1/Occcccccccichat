@@ -11,10 +11,11 @@ import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import com.example.occcccccccichat.Tool.AEvent
 import com.example.occcccccccichat.Tool.MLOC
+import com.example.occcccccccichat.Tool.MyApplication
 import com.example.occcccccccichat.service.KeepLiveService
 import com.example.occcccccccichat.ui.login.LoginActivity
 
-class LauchActivity : AppCompatActivity() {
+class LaunchActivity : AppCompatActivity() {
     private var isLogin:Boolean = false
     private val checkNetState: Boolean = false
     private var times:Int = 0
@@ -24,7 +25,7 @@ class LauchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         //设置全屏
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        setContentView(R.layout.activity_lauch)
+        setContentView(R.layout.activity_launch)
         AEvent.setHandler(Handler())
         checkPermission()
     }
@@ -81,14 +82,11 @@ class LauchActivity : AppCompatActivity() {
     }
 
     private fun initSDK(){
-        startService()
-        val intent = Intent(this,MainActivity::class.java)
-        startActivity(intent)
-        finish()
+        MLOC.init(MyApplication.context)
+        checkLogin()
     }
 
     private fun startService(){
-        //TODO:在创建服务之前先进入登陆注册界面
         val intent = Intent(this, KeepLiveService::class.java)
         startService(intent)
     }
@@ -96,7 +94,11 @@ class LauchActivity : AppCompatActivity() {
     private fun checkLogin(){
         if(MLOC.userState.equals("logout")){
             startActivity(Intent(this,LoginActivity::class.java))
+        } else if (MLOC.userState.equals("login")){
+            startService()
+            startActivity(Intent(this,MainActivity::class.java))
         }
+        finish()
     }
 
 }
