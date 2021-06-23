@@ -57,13 +57,13 @@ public class ContactActivity extends AppCompatActivity {
         adapter = new ContactRVAdapter(viewModel.getRepository().getContactItemList());
         adapter.setOnClickListener((int position)->{
             Intent intent = new Intent(ContactActivity.this, ChatActivity.class);
-            intent.putExtra("targetId", Objects.requireNonNull(viewModel.getRepository().getContactItemList().getValue()).get(position).getId());
+            intent.putExtra("targetId", Objects.requireNonNull(viewModel.getRepository().getContactItemList().getValue()).get(position).getTargetId());
             startActivity(intent);
         });
         adapter.setOnLongClickListener((int position)->{
             Intent intent = new Intent(ContactActivity.this,ContactEditActivity.class);
-            intent.putExtra("targetId", Objects.requireNonNull(viewModel.getRepository().getContactItemList().getValue()).get(position).getId());
-            LogUtil.INSTANCE.d("Debug"," " + Objects.requireNonNull(viewModel.getRepository().getContactItemList().getValue()).get(position).getId());
+            intent.putExtra("targetId", Objects.requireNonNull(viewModel.getRepository().getContactItemList().getValue()).get(position).getTargetId());
+            LogUtil.INSTANCE.d("Debug"," " + Objects.requireNonNull(viewModel.getRepository().getContactItemList().getValue()).get(position).getTargetId());
             startActivity(intent);
         });
     }

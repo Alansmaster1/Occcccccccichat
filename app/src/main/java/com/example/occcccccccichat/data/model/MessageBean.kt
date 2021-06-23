@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class MessageBean(
-    var conversationId:String = "",
+    var targetId:String = "",
     var fromId:String = "",
     var msg:String = "",
     var time:String = ""

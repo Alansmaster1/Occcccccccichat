@@ -17,6 +17,9 @@ import com.starrtc.starrtcsdk.core.im.message.XHIMMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * 该类中的代码作者为starRTC作者, 本人只作修改和注释
+ */
 public class BaseActivity extends AppCompatActivity implements IEventListener {
     @Override
     public void dispatchEvent(String aEventID, boolean success, Object eventObj) {
@@ -27,9 +30,6 @@ public class BaseActivity extends AppCompatActivity implements IEventListener {
                 if(findViewById(R.id.btn_chatList)!=null){
                     findViewById(R.id.btn_chatList).setBackgroundColor(MLOC.hasNewC2CMsg? Color.RED:Color.BLUE);
                 }
-//                if(findViewById(R.id.im_new)!=null) {
-//                    findViewById(R.id.im_new).setVisibility((MLOC.hasNewC2CMsg || MLOC.hasNewGroupMsg) ? View.VISIBLE : View.INVISIBLE);
-//                }
                 try {
                     XHIMMessage revMsg = (XHIMMessage) eventObj;
                     JSONObject alertData = new JSONObject();
@@ -41,25 +41,6 @@ public class BaseActivity extends AppCompatActivity implements IEventListener {
                     e.printStackTrace();
                 }
                 break;
-//            case AEvent.AEVENT_GROUP_REV_MSG:
-//                MLOC.hasNewGroupMsg = true;
-//                if(findViewById(R.id.group_new)!=null){
-//                    findViewById(R.id.group_new).setVisibility(MLOC.hasNewGroupMsg?View.VISIBLE:View.INVISIBLE);
-//                }
-//                if(findViewById(R.id.im_new)!=null) {
-//                    findViewById(R.id.im_new).setVisibility((MLOC.hasNewC2CMsg || MLOC.hasNewGroupMsg) ? View.VISIBLE : View.INVISIBLE);
-//                }
-//                try{
-//                    XHIMMessage revMsg = (XHIMMessage) eventObj;
-//                    JSONObject alertData = new JSONObject();
-//                    alertData.put("listType",1);
-//                    alertData.put("farId",revMsg.targetId);
-//                    alertData.put("msg","收到一条群消息");
-//                    MLOC.showDialog(BaseActivity.this,alertData);
-//                } catch (JSONException e){
-//                    e.printStackTrace();
-//                }
-//                break;
             case AEvent.AEVENT_USER_OFFLINE:
                 MLOC.showMsg(BaseActivity.this,"服务已断开");
                 ((TextView)findViewById(R.id.loading)).setText("连接中...");
@@ -101,12 +82,6 @@ public class BaseActivity extends AppCompatActivity implements IEventListener {
     @Override
     protected void onResume() {
         super.onResume();
-//        if(findViewById(R.id.group_new)!=null){
-//            findViewById(R.id.group_new).setVisibility(MLOC.hasNewGroupMsg?View.VISIBLE:View.INVISIBLE);
-//        }
-//        if(findViewById(R.id.im_new)!=null) {
-//            findViewById(R.id.im_new).setVisibility((MLOC.hasNewC2CMsg || MLOC.hasNewGroupMsg) ? View.VISIBLE : View.INVISIBLE);
-//        }
         addListener();
     }
 
@@ -119,7 +94,6 @@ public class BaseActivity extends AppCompatActivity implements IEventListener {
     private void addListener(){
         AEvent.addListener(AEvent.AEVENT_C2C_REV_MSG,this);
         AEvent.addListener(AEvent.AEVENT_REV_SYSTEM_MSG,this);
-        AEvent.addListener(AEvent.AEVENT_GROUP_REV_MSG,this);
         AEvent.addListener(AEvent.AEVENT_USER_ONLINE,this);
         AEvent.addListener(AEvent.AEVENT_USER_OFFLINE,this);
         AEvent.addListener(AEvent.AEVENT_CONN_DEATH,this);
@@ -128,7 +102,6 @@ public class BaseActivity extends AppCompatActivity implements IEventListener {
     private void removeListener(){
         AEvent.removeListener(AEvent.AEVENT_C2C_REV_MSG,this);
         AEvent.removeListener(AEvent.AEVENT_REV_SYSTEM_MSG,this);
-        AEvent.removeListener(AEvent.AEVENT_GROUP_REV_MSG,this);
         AEvent.removeListener(AEvent.AEVENT_USER_ONLINE,this);
         AEvent.removeListener(AEvent.AEVENT_USER_OFFLINE,this);
         AEvent.removeListener(AEvent.AEVENT_CONN_DEATH,this);

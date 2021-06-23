@@ -4,6 +4,9 @@ import com.example.occcccccccichat.Tool.AEvent;
 import com.starrtc.starrtcsdk.api.XHConstants;
 import com.starrtc.starrtcsdk.apiInterface.IXHLoginManagerListener;
 
+/**
+ * 该类中的代码作者为starRTC作者, 本人只作修改和注释
+ */
 public class XHLoginManagerListener implements IXHLoginManagerListener {
     @Override
     public void onConnectionStateChanged(XHConstants.XHSDKConnectionState state) {

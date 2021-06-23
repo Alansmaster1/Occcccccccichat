@@ -11,11 +11,9 @@ import com.example.occcccccccichat.data.dao.*
 import com.example.occcccccccichat.data.model.*
 import java.util.*
 
-@Database(version =6, entities = [MsgItem::class, ContactItem::class, ChatMsgItem::class,MessageBean::class,HistoryBean::class])
+@Database(version =13, entities = [ContactItem::class,MessageBean::class,HistoryBean::class])
 abstract class AppDatabase : RoomDatabase(){
-    abstract fun msgItemDao(): MsgItemDao
     abstract fun contactItemDao(): ContactItemDao
-    abstract fun chatMsgItemDao(): ChatMsgItemDao
     abstract fun messageDao(): MessageDao
     abstract fun historyDao(): HistoryDao
 

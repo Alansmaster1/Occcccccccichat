@@ -10,7 +10,10 @@ import android.os.Looper;
 import android.view.View;
 
 import com.example.occcccccccichat.R;
+import com.example.occcccccccichat.Tool.MLOC;
 import com.example.occcccccccichat.Tool.MyApplication;
+import com.example.occcccccccichat.data.dao.ContactItemDao;
+import com.example.occcccccccichat.data.database.AppDatabase;
 import com.example.occcccccccichat.data.model.ContactItem;
 import com.example.occcccccccichat.databinding.ActivityContactAddBinding;
 
@@ -32,6 +35,7 @@ public class ContactAddActivity extends AppCompatActivity {
     private ActivityContactAddBinding binding;
     private List<ContactItem> mData;
     private ContactSearchRVAdapter adapter;
+    private final ContactItemDao contactItemDao = AppDatabase.Companion.getDatabase().contactItemDao();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +46,45 @@ public class ContactAddActivity extends AppCompatActivity {
         mData = new ArrayList<ContactItem>();
         adapter = new ContactSearchRVAdapter(mData);
         //TODO:添加到ContactItem表中
-        adapter.setOnClickListener(this::addToContactList);
+        adapter.setOnClickListener(new ContactSearchRVAdapter.ViewHolder.ItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        contactItemDao.insertItem(mData.get(position));
+                        String ownId = mData.get(position).getOwnId();
+                        String targetId = mData.get(position).getTargetId();
+                        mData.remove(position);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
+                        OkHttpClient client = new OkHttpClient();
+                        Request request = new Request
+                                .Builder()
+                                .url("http://42.192.202.168/ochichat/insertContact.php?"
+                                +"ownId="+ownId
+                                +"&targetId="+targetId)
+                                .get()
+                                .build();
+                        client.newCall(request).enqueue(new Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+
+                            }
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                response.close();
+                            }
+                        });
+                    }
+                }).start();
+            }
+        });
 
         binding.btnSearch.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -79,7 +121,8 @@ public class ContactAddActivity extends AppCompatActivity {
                 Request request = new Request
                         .Builder()
                         .url("http://42.192.202.168/ochichat/searchUser.php?"
-                        +"key="+binding.editTextSearch.getText().toString())
+                        +"ownId="+MLOC.userId
+                        +"&key="+binding.editTextSearch.getText().toString())
                         .get()
                         .build();
                 client.newCall(request).enqueue(new Callback() {
@@ -97,6 +140,7 @@ public class ContactAddActivity extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        response.close();
                     }
                 });
             }
@@ -109,6 +153,8 @@ public class ContactAddActivity extends AppCompatActivity {
         for(int i=0;i<len;++i){
             JSONObject jsonObject = (JSONObject) jsonArray.get(i);
             ContactItem tmp = new ContactItem(jsonObject.getString("name"));
+            tmp.setOwnId(MLOC.userId);
+            tmp.setTargetId(jsonObject.getString("id"));
             mData.add(tmp);
         }
 
@@ -118,10 +164,6 @@ public class ContactAddActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
             }
         });
-
-    }
-
-    private void addToContactList(int position){
 
     }
 

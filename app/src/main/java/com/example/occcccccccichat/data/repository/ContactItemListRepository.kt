@@ -2,6 +2,7 @@ package com.example.occcccccccichat.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.paging.*
+import com.example.occcccccccichat.Tool.MLOC
 import com.example.occcccccccichat.data.dao.ContactItemDao
 import com.example.occcccccccichat.data.database.AppDatabase
 import com.example.occcccccccichat.data.model.ContactItem
@@ -10,7 +11,7 @@ import kotlinx.coroutines.withContext
 
 class ContactItemListRepository {
     private val contactItemDao: ContactItemDao = AppDatabase.getDatabase().contactItemDao()
-    val contactItemList: LiveData<List<ContactItem>> = contactItemDao.queryAllItem()
+    val contactItemList: LiveData<List<ContactItem>> = contactItemDao.queryAllItemInOwner(MLOC.userId)
 
     suspend fun insert(item : ContactItem): Long{
         return withContext(Dispatchers.IO){
@@ -18,9 +19,9 @@ class ContactItemListRepository {
         }
     }
 
-    suspend fun query(id : Long) : ContactItem{
+    suspend fun query(ownId : String, targetId:String) : ContactItem{
         return withContext(Dispatchers.IO){
-            contactItemDao.queryById(id)
+            contactItemDao.queryById(ownId,targetId)
         }
     }
 

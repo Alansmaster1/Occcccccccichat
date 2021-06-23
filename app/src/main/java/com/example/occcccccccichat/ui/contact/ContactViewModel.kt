@@ -27,9 +27,9 @@ class ContactViewModel : ViewModel() {
         }
     }
 
-    fun getItem(id:Long, item: MutableLiveData<ContactItem>) {
+    fun getItem(ownId:String, targetId:String, item: MutableLiveData<ContactItem>) {
         viewModelScope.launch {
-            item.postValue(repository.query(id))
+            item.postValue(repository.query(ownId,targetId))
         }
     }
 

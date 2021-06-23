@@ -6,7 +6,8 @@ import androidx.room.PrimaryKey
 @Entity
 data class HistoryBean(
     var type:String = "",
-    var conversationId:String = "",
+    var fromId:String = "",
+    var targetId:String = "",
     var newMsgCount:Int = 0,
     var lastMsg:String = "",
     var lastTime:String = "",

@@ -15,7 +15,6 @@ import com.example.occcccccccichat.data.database.AppDatabase;
 import com.example.occcccccccichat.data.model.HistoryBean;
 import com.example.occcccccccichat.databinding.ActivityMsgBinding;
 import com.example.occcccccccichat.ui.chat.ChatActivity;
-import com.example.occcccccccichat.ui.chat.ChatActivity_bak;
 
 import java.util.List;
 
@@ -33,15 +32,27 @@ public class MsgActivity extends BaseActivity {
 
         adapter = new MsgRVAdapter(viewModel.getMHistoryList());
         adapter.setOnClickListener((int position) -> {
-            MLOC.addHistory(viewModel.getMHistoryList().get(position),true );
-            mTarget = viewModel.getMHistoryList().get(position).getConversationId();
-            Intent intent = new Intent(this, ChatActivity.class);
-            intent.putExtra("targetId",mTarget);
-            startActivity(intent);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    MLOC.addHistory(viewModel.getMHistoryList().get(position),true );
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mTarget = viewModel.getMHistoryList().get(position).getFromId().equals(MLOC.userId) ?
+                                    viewModel.getMHistoryList().get(position).getTargetId() :
+                                    viewModel.getMHistoryList().get(position).getFromId();
+                            Intent intent = new Intent(MsgActivity.this, ChatActivity.class);
+                            intent.putExtra("targetId",mTarget);
+                            startActivity(intent);
+                        }
+                    });
+                }
+            }).start();
+
         });
 
         initRecyclerView();
-
         setContentView(binding.getRoot());
     }
 
@@ -56,16 +67,13 @@ public class MsgActivity extends BaseActivity {
         binding.recyclerviewMsg.setLayoutManager(layoutManager);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    private void updateRVList(){
         MLOC.hasNewC2CMsg = false;
         viewModel.getMHistoryList().clear();
-        //在子线程访问数据库
         new Thread(new Runnable() {
             @Override
             public void run() {
-                List<HistoryBean> list = MLOC.getHistoryList(AppDatabase.Companion.getDatabase().getHISTORY_TYPE_C2C());
+                List<HistoryBean> list = MLOC.getHistoryListInOwner(AppDatabase.Companion.getDatabase().getHISTORY_TYPE_C2C(),MLOC.userId);
                 if(list != null && list.size()>0){
                     viewModel.getMHistoryList().addAll(list);
                 }
@@ -77,6 +85,12 @@ public class MsgActivity extends BaseActivity {
                 });
             }
         }).start();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateRVList();
 //        List<HistoryBean> list = MLOC.getHistoryList(AppDatabase.Companion.getDatabase().getHISTORY_TYPE_C2C());
 //        if(list != null && list.size()>0){
 //            viewModel.getMHistoryList().addAll(list);

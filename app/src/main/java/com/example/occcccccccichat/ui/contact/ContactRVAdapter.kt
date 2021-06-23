@@ -18,7 +18,8 @@ class ContactRVAdapter(private val _dataSet: LiveData<List<ContactItem>>)
     class ViewHolder(view: View, clickListener: ItemClickListener?, longClickListener: ItemLongClickListener?):
             RecyclerView.ViewHolder(view),View.OnClickListener,View.OnLongClickListener {
 
-        val textView: TextView = view.findViewById(R.id.name_item_contact)
+        val nameTextView: TextView = view.findViewById(R.id.name_item_contact)
+        val idTextView:TextView = view.findViewById(R.id.id_item_contact)
         var mItemClickListener: ItemClickListener? = clickListener
         var mItemLongClickListener: ItemLongClickListener? = longClickListener
 
@@ -54,7 +55,8 @@ class ContactRVAdapter(private val _dataSet: LiveData<List<ContactItem>>)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.textView.text = _dataSet.value?.get(position)?.nickname ?: ""
+        holder.idTextView.text = _dataSet.value?.get(position)?.targetId
+        holder.nameTextView.text = _dataSet.value?.get(position)?.nickname
     }
 
     override fun getItemCount(): Int {

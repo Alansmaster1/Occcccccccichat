@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.lifecycle.*
 import com.example.occcccccccichat.Tool.LogUtil
+import com.example.occcccccccichat.Tool.MLOC
 import com.example.occcccccccichat.data.model.ContactItem
 import com.example.occcccccccichat.databinding.ActivityContactEditBinding
 
@@ -25,20 +26,20 @@ class ContactEditActivity : AppCompatActivity() {
         setContentView(binding.root)
     }
 
-    private fun accessInfo(id : Long): MutableLiveData<ContactItem>{
+    private fun accessInfo(targetId : String): MutableLiveData<ContactItem>{
         val item: MutableLiveData<ContactItem> = MutableLiveData()
-        viewModel.getItem(id,item)
+        viewModel.getItem(MLOC.userId,targetId,item)
         item.observe(this, Observer {
             binding.nameTextView.setText(item.value?.name)
             binding.nicknameEditText.setText(item.value?.nickname)
-            binding.idTextView.text = item.value?.id.toString()
+            binding.idTextView.text = item.value?.targetId.toString()
         })
         return item
     }
 
     private fun operationTypeCheck(){
-        val id: Long = intent.getLongExtra("targetId",-1);
-        if(id==-1L){
+        val id: String? = intent.getStringExtra("targetId")
+        if(id==null){
             binding.nameTextView.isEnabled = true
             binding.idTextView.visibility = View.INVISIBLE
             binding.idLabel.visibility = View.INVISIBLE
@@ -54,7 +55,10 @@ class ContactEditActivity : AppCompatActivity() {
             binding.idTextView.visibility = View.VISIBLE
             binding.idLabel.visibility = View.VISIBLE
             binding.saveBtn.setOnClickListener{
-                item.value?.let { it1 -> viewModel.updateItem(it1) }
+                item.value?.let { it1 ->
+                    it1.nickname = binding.nicknameEditText.text.toString()
+                    viewModel.updateItem(it1)
+                }
                 finish()
             }
         }

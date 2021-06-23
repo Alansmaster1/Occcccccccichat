@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.occcccccccichat.Tool.AEvent;
 import com.example.occcccccccichat.Tool.LogUtil;
 import com.example.occcccccccichat.Tool.MLOC;
 import com.example.occcccccccichat.Tool.MyApplication;
@@ -51,8 +52,12 @@ public class MainActivity extends BaseActivity{
         binding.btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //登出
                 MLOC.userState = "logout";
                 MLOC.saveUserState(MLOC.userState);
+                XHClient.getInstance().getLoginManager().logout();
+                AEvent.notifyListener(AEvent.AEVENT_LOGOUT,true,null);
+                MLOC.hasLogout = true;
                 startActivity(new Intent(MainActivity.this,LoginActivity.class));
                 finish();
             }

@@ -1,5 +1,6 @@
 package com.example.occcccccccichat
 
+import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -7,25 +8,65 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.view.View
 import android.view.WindowManager
+import android.view.animation.*
+import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import com.example.occcccccccichat.Tool.AEvent
 import com.example.occcccccccichat.Tool.MLOC
 import com.example.occcccccccichat.Tool.MyApplication
+import com.example.occcccccccichat.databinding.ActivityLaunchBinding
 import com.example.occcccccccichat.service.KeepLiveService
 import com.example.occcccccccichat.ui.login.LoginActivity
+import com.starrtc.starrtcsdk.api.XHClient
 
 class LaunchActivity : AppCompatActivity() {
-    private var isLogin:Boolean = false
-    private val checkNetState: Boolean = false
+    private var isLogin = false;
     private var times:Int = 0
     private val REQUEST_PHONE_PERMISSION = 0
+    private lateinit var binding: ActivityLaunchBinding
+
+    private val animationListener_logo:Animation.AnimationListener = object: Animation.AnimationListener{
+        override fun onAnimationStart(animation: Animation?) {
+            rotate_scale_positive(binding.logo1)
+            startService()
+        }
+
+        override fun onAnimationEnd(animation: Animation?) {
+            Fade_out(binding.logo2)
+            rotate_scale_reverse(binding.logo1)
+        }
+
+        override fun onAnimationRepeat(animation: Animation?) {
+
+        }
+
+    }
+
+    private val animationListener_finish:Animation.AnimationListener = object: Animation.AnimationListener{
+        override fun onAnimationStart(animation: Animation?) {
+            //TODO("Not yet implemented")
+        }
+
+        override fun onAnimationEnd(animation: Animation?) {
+            //TODO("Not yet implemented")
+            startActivity(Intent(this@LaunchActivity,MainActivity::class.java))
+            finish()
+        }
+
+        override fun onAnimationRepeat(animation: Animation?) {
+            //TODO("Not yet implemented")
+        }
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //设置全屏
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        setContentView(R.layout.activity_launch)
+        binding = ActivityLaunchBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         AEvent.setHandler(Handler())
         checkPermission()
     }
@@ -94,11 +135,46 @@ class LaunchActivity : AppCompatActivity() {
     private fun checkLogin(){
         if(MLOC.userState.equals("logout")){
             startActivity(Intent(this,LoginActivity::class.java))
+            finish()
         } else if (MLOC.userState.equals("login")){
-            startService()
-            startActivity(Intent(this,MainActivity::class.java))
+            Fade_in(binding.logo2)
+//            startService()
+//            startActivity(Intent(this@LaunchActivity,MainActivity::class.java))
         }
-        finish()
+    }
+
+    private fun Fade_in(view:View){
+        val alphaAnimation = AlphaAnimation(0.0f,1.0f)
+        alphaAnimation.apply {
+            fillAfter = true
+            duration = 2000
+            interpolator = AccelerateInterpolator()
+            setAnimationListener(animationListener_logo)
+        }
+        view.startAnimation(alphaAnimation)
+    }
+
+    private fun Fade_out(view:View){
+        val alphaAnimation = AlphaAnimation(1.0f,0.0f)
+        alphaAnimation.apply {
+            fillAfter = true
+            duration = 2000
+            interpolator = DecelerateInterpolator()
+            setAnimationListener((animationListener_finish))
+        }
+        view.startAnimation(alphaAnimation)
+    }
+
+    private fun rotate_scale_positive(view:View){
+        val animation = AnimationUtils.loadAnimation(this,R.anim.rotate_scale_positive)
+        animation.fillAfter = true
+        view.startAnimation(animation)
+    }
+
+    private fun rotate_scale_reverse(view:View){
+        val animation = AnimationUtils.loadAnimation(this,R.anim.rotate_scale_reverse)
+        animation.fillAfter = true
+        view.startAnimation(animation)
     }
 
 }

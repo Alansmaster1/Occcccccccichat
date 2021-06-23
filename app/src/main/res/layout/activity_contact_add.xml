@@ -22,7 +22,7 @@
             android:layout_weight="5"
 
             android:textSize="18sp"
-            android:inputType="number"
+            android:inputType="text"
             android:gravity="center"/>
 
         <Button

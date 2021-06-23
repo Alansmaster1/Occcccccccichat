@@ -17,7 +17,8 @@ class ContactSearchRVAdapter(private var _dataSet: List<ContactItem>)
         RecyclerView.ViewHolder(view), View.OnClickListener, View.OnLongClickListener {
 
         //ViewHolder中的控件需要改,其他的大概率不变
-        val textView: TextView = view.findViewById(R.id.name_item_contact)
+        val nameTextView: TextView = view.findViewById(R.id.name_item_contact)
+        val idTextView:TextView = view.findViewById(R.id.id_item_contact)
         var mItemClickListener: ItemClickListener? = clickListener
         var mItemLongClickListener: ItemLongClickListener? = longClickListener
 
@@ -53,7 +54,8 @@ class ContactSearchRVAdapter(private var _dataSet: List<ContactItem>)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.textView.text = _dataSet.get(position).name
+        holder.nameTextView.text = _dataSet.get(position).name
+        holder.idTextView.text = _dataSet.get(position).targetId
     }
 
     override fun getItemCount(): Int {

@@ -55,9 +55,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.chat.ChatActivity_bak" />
         <activity android:name=".ui.contact.ContactEditActivity" />
-        <activity android:name=".MainActivity_or" />
     </application>
 
 </manifest>

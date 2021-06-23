@@ -87,6 +87,7 @@ public class LoginActivity extends AppCompatActivity {
             if (result.equals("验证成功")) {
                 Looper.prepare();
                 MLOC.userId = binding.editTextId.getText().toString();
+                MLOC.saveUserId(MLOC.userId);
                 startService(new Intent(LoginActivity.this, KeepLiveService.class));
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();

@@ -1,14 +1,13 @@
 package com.example.occcccccccichat.ui.chat
 
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.occcccccccichat.R
-import com.example.occcccccccichat.data.model.ChatMsgItem
+import com.example.occcccccccichat.Tool.MLOC
 import com.example.occcccccccichat.data.model.MessageBean
 
 class ChatRVAdapter(private val _dataSet: List<MessageBean>)
@@ -19,9 +18,12 @@ class ChatRVAdapter(private val _dataSet: List<MessageBean>)
     class ViewHolder(view: View, longClickListener: ItemLongClickListener?):
         RecyclerView.ViewHolder(view), View.OnLongClickListener {
 
-        val contentTextView: TextView = view.findViewById(R.id.content_TextView)
-        val op_avatar = view.findViewById<ImageView>(R.id.op_avatar)
-        val self_avatar = view.findViewById<ImageView>(R.id.self_avatar)
+        val messageTextView: TextView = view.findViewById(R.id.item_chat_message)
+        val opIdTextView:TextView = view.findViewById<TextView>(R.id.item_chat_id_op)
+        val selfIdTextView:TextView = view.findViewById<TextView>(R.id.item_chat_id_self)
+        val timeTextView:TextView = view.findViewById<TextView>(R.id.item_chat_time)
+        val layoutOp:View = view.findViewById(R.id.layout_chat_op)
+        val layoutSelf:View = view.findViewById(R.id.layout_chat_self)
         var mItemLongClickListener: ItemLongClickListener? = longClickListener
 
         init{
@@ -47,7 +49,20 @@ class ChatRVAdapter(private val _dataSet: List<MessageBean>)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.contentTextView.text = _dataSet.get(position).msg
+        if(_dataSet.get(position).fromId == MLOC.userId){
+            holder.opIdTextView.text = _dataSet.get(position).targetId
+            holder.layoutOp.visibility = View.GONE
+            holder.layoutSelf.visibility = View.VISIBLE
+            holder.messageTextView.gravity = Gravity.END
+        } else {
+            holder.opIdTextView.text = _dataSet.get(position).fromId
+            holder.layoutOp.visibility = View.VISIBLE
+            holder.layoutSelf.visibility = View.GONE
+            holder.messageTextView.gravity = Gravity.START
+        }
+        holder.selfIdTextView.text = MLOC.userId
+        holder.timeTextView.text = _dataSet.get(position).time
+        holder.messageTextView.text = _dataSet.get(position).msg
     }
 
     override fun getItemCount(): Int {

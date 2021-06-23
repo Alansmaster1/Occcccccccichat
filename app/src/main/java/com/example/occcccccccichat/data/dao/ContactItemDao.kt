@@ -18,12 +18,18 @@ interface ContactItemDao {
     @Delete
     fun deleteItem(item : ContactItem)
 
-    @Query("select * from ContactItem where id = :id LIMIT 1")
-    fun queryById(id : Long): ContactItem
+    @Query("select * from ContactItem where ownId = :ownId and targetId = :targetId LIMIT 1")
+    fun queryById(ownId : String, targetId : String): ContactItem
 
     @Query("select * from ContactItem")
     fun queryAllItem(): LiveData<List<ContactItem>>
 
     @Query("delete from ContactItem")
     fun deleteAllItem()
+
+    @Query("select * from ContactItem where ownId = :ownId")
+    fun queryAllItemInOwner(ownId: String): LiveData<List<ContactItem>>
+
+    @Query("delete from ContactItem where ownId =:ownId")
+    fun deleteAllItemInOwner(ownId: String)
 }

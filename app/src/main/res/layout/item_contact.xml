@@ -3,16 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    tools:viewBindingIgnore="true"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
-        android:id="@+id/avatar_item_contact"
-        android:layout_width="50dp"
+    <TextView
+        android:id="@+id/id_item_contact"
+        android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:contentDescription="@string/avatar"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="10dp"
+
+        android:text="@string/id"
+        android:gravity="center"
+        android:textSize="30sp"
+
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintStart_toStartOf="parent" />
+
 
     <TextView
         android:id="@+id/name_item_contact"
@@ -21,9 +27,9 @@
         android:textSize="30sp"
         android:gravity="center"
         android:maxLines="1"
-        android:text="Default"
+        android:text="@string/name"
         app:layout_constraintTop_toTopOf = "parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/avatar_item_contact"/>
+        app:layout_constraintStart_toEndOf="@id/id_item_contact"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

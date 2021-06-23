@@ -11,17 +11,21 @@ import com.starrtc.starrtcsdk.core.im.message.XHIMMessage;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+/**
+ * 该类中的代码作者为starRTC作者, 本人只作修改和注释
+ */
 public class XHChatManagerListener implements IXHChatManagerListener {
     @Override
     public void onReceivedMessage(XHIMMessage message) {
         String type = AppDatabase.Companion.getDatabase().getHISTORY_TYPE_C2C();
         String lastTime = new SimpleDateFormat("MM-dd HH:mm", Locale.CHINA).format(new java.util.Date());
         String lastMsg = message.contentData;
-        String conversationId = message.fromId;
+        String fromId = message.fromId == null ? "" : message.fromId;
+        String targetId = message.targetId == null ? MLOC.userId : message.targetId;
         int newMsgCount = 1;
 
-        HistoryBean historyBean = new HistoryBean(type,conversationId,newMsgCount,lastMsg,lastTime,"","");
-        MessageBean messageBean = new MessageBean(conversationId,conversationId,lastMsg,lastTime);
+        HistoryBean historyBean = new HistoryBean(type,fromId,targetId,newMsgCount,lastMsg,lastTime,"","");
+        MessageBean messageBean = new MessageBean(targetId,fromId,lastMsg,lastTime);
 
         new Thread(new Runnable() {
             @Override
@@ -41,8 +45,8 @@ public class XHChatManagerListener implements IXHChatManagerListener {
         String lastMsg = message.contentData;
         String conversationId = message.fromId;
         int newMsgCount = 1;
-        HistoryBean historyBean = new HistoryBean(type,conversationId,newMsgCount,lastMsg,lastTime,"","");
-        MessageBean messageBean = new MessageBean(conversationId,conversationId,lastMsg,lastTime);
+        HistoryBean historyBean = new HistoryBean(type,message.fromId,message.targetId,newMsgCount,lastMsg,lastTime,"","");
+        MessageBean messageBean = new MessageBean(message.targetId,message.fromId,lastMsg,lastTime);
 
         new Thread(new Runnable() {
             @Override

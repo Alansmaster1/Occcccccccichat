@@ -10,20 +10,18 @@ import com.example.occcccccccichat.Tool.IEventListener;
 import com.example.occcccccccichat.Tool.LogUtil;
 import com.example.occcccccccichat.Tool.MLOC;
 import com.example.occcccccccichat.listener.XHChatManagerListener;
-import com.example.occcccccccichat.listener.XHGroupManagerListener;
 import com.example.occcccccccichat.listener.XHLoginManagerListener;
 import com.starrtc.starrtcsdk.api.XHClient;
 import com.starrtc.starrtcsdk.api.XHCustomConfig;
-import com.starrtc.starrtcsdk.apiInterface.IXHErrorCallback;
 import com.starrtc.starrtcsdk.apiInterface.IXHResultCallback;
 
-import java.util.Random;
-
+/**
+ * 该类中的代码作者为starRTC作者, 本人只作修改和注释
+ */
 public class KeepLiveService extends Service implements IEventListener {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
-        //throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
@@ -44,7 +42,7 @@ public class KeepLiveService extends Service implements IEventListener {
     }
 
     private void initSDK(){
-        //TODO:MLOC.init在Launch中被调用
+        //修改后MLOC.init在Launch中被调用
         //MLOC.init(this);
         initFree();
     }
@@ -52,16 +50,11 @@ public class KeepLiveService extends Service implements IEventListener {
     private boolean isLogin = false;
     private void initFree(){
 
-        //处理登陆业务逻辑的代码,原版本中是随机一个ID登陆
-        //没有注册的业务逻辑
+        //处理登陆业务逻辑的代码,原版本中是随机一个ID登陆,修改后的登录和注册逻辑分别移交给LoginActivity/SignupActivity
         isLogin = XHClient.getInstance().getIsOnline();
         LogUtil.INSTANCE.d("Debug",XHClient.getInstance().getIsOnline() + " KeepLiveServer");
+        //防止多次启动service
         if(!isLogin){
-//            if(MLOC.userId.equals("")){
-//                MLOC.userId = "" + (new Random().nextInt(900000)+100000);
-//                MLOC.saveUserId(MLOC.userId);
-//                MLOC.saveUserState(MLOC.userState);
-//            }
             //当userState == logout 进入 KeepLiveService时,说明是从登录进来的
             if(MLOC.userState.equals("logout")){
                 MLOC.userState = "login";
@@ -79,7 +72,6 @@ public class KeepLiveService extends Service implements IEventListener {
             },new Handler());
 
             XHClient.getInstance().getChatManager().addListener(new XHChatManagerListener());
-            XHClient.getInstance().getGroupManager().addListener(new XHGroupManagerListener());
             XHClient.getInstance().getLoginManager().addListener(new XHLoginManagerListener());
 
             XHClient.getInstance().getLoginManager().loginFree(new IXHResultCallback() {
@@ -100,24 +92,16 @@ public class KeepLiveService extends Service implements IEventListener {
 
     private void addListener(){
         AEvent.addListener(AEvent.AEVENT_LOGOUT,this);
-        AEvent.addListener(AEvent.AEVENT_VOIP_REV_CALLING,this);
-        AEvent.addListener(AEvent.AEVENT_VOIP_REV_CALLING_AUDIO,this);
-        AEvent.addListener(AEvent.AEVENT_VOIP_P2P_REV_CALLING,this);
         AEvent.addListener(AEvent.AEVENT_C2C_REV_MSG,this);
         AEvent.addListener(AEvent.AEVENT_REV_SYSTEM_MSG,this);
-        AEvent.addListener(AEvent.AEVENT_GROUP_REV_MSG,this);
         AEvent.addListener(AEvent.AEVENT_USER_KICKED,this);
         AEvent.addListener(AEvent.AEVENT_CONN_DEATH,this);
     }
 
     private void removeListener(){
         AEvent.removeListener(AEvent.AEVENT_LOGOUT,this);
-        AEvent.removeListener(AEvent.AEVENT_VOIP_REV_CALLING,this);
-        AEvent.removeListener(AEvent.AEVENT_VOIP_REV_CALLING_AUDIO,this);
-        AEvent.removeListener(AEvent.AEVENT_VOIP_P2P_REV_CALLING,this);
         AEvent.removeListener(AEvent.AEVENT_C2C_REV_MSG,this);
         AEvent.removeListener(AEvent.AEVENT_REV_SYSTEM_MSG,this);
-        AEvent.removeListener(AEvent.AEVENT_GROUP_REV_MSG,this);
         AEvent.removeListener(AEvent.AEVENT_USER_KICKED,this);
         AEvent.removeListener(AEvent.AEVENT_CONN_DEATH,this);
     }

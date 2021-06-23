@@ -10,6 +10,9 @@ interface MessageDao {
     @Insert
     fun setMessage(messageBean: MessageBean)
 
-    @Query("select * from MessageBean where conversationId=:conversationId order by id desc limit 5")
-    fun getMessageList(conversationId : String): List<MessageBean>
+    @Query("select * from MessageBean where targetId=:targetId and fromId=:fromId and msg=:msg")
+    fun isInMessageBean(targetId: String,fromId: String,msg:String): List<MessageBean>
+
+    @Query("select * from MessageBean where (targetId=:targetId and fromId=:fromId) or (targetId=:fromId and fromId=:targetId) order by id asc")
+    fun getMessageList(targetId : String,fromId : String): List<MessageBean>
 }

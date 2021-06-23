@@ -84,11 +84,22 @@ public class ChatActivity extends AppCompatActivity implements IEventListener {
     protected void onResume() {
         super.onResume();
         viewModel.getMMessageList().clear();
-        List<MessageBean> list = MLOC.getMessageList(mTargetId);
-        if(list!=null && list.size()>0){
-            viewModel.getMMessageList().addAll(list);
-        }
-        adapter.notifyDataSetChanged();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<MessageBean> list = MLOC.getMessageList(mTargetId,MLOC.userId);
+                if(list!=null && list.size()>0){
+                    viewModel.getMMessageList().addAll(list);
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }).start();
+
     }
 
     @Override
@@ -119,12 +130,10 @@ public class ChatActivity extends AppCompatActivity implements IEventListener {
         String type = AppDatabase.Companion.getDatabase().getHISTORY_TYPE_C2C();
         String lastTime = new SimpleDateFormat("MM-dd HH:mm", Locale.CHINA).format(new java.util.Date());
         String lastMsg = message.contentData;
-        String conversationId = message.targetId;
-        HistoryBean historyBean = new HistoryBean(type,conversationId,1,lastMsg,lastTime,"","");
 
+        HistoryBean historyBean = new HistoryBean(type,message.fromId,message.targetId,1,lastMsg,lastTime,"","");
 
-        String fromId = message.fromId;
-        MessageBean messageBean = new MessageBean(conversationId,fromId,lastMsg,lastTime);
+        MessageBean messageBean = new MessageBean(message.targetId,message.fromId,lastMsg,lastTime);
 
 
         new Thread(new Runnable() {
@@ -157,11 +166,10 @@ public class ChatActivity extends AppCompatActivity implements IEventListener {
                     String type = AppDatabase.Companion.getDatabase().getHISTORY_TYPE_C2C();
                     String lastTime = new SimpleDateFormat("MM-dd HH:mm", Locale.CHINA).format(new java.util.Date());
                     String lastMsg = revMsg.contentData;
-                    String conversationId = revMsg.fromId;
-                    HistoryBean historyBean = new HistoryBean(type,conversationId,1,lastMsg,lastTime,"","");
+                    String targetId = revMsg.targetId == null ? MLOC.userId : revMsg.targetId;
 
-                    String fromId = revMsg.fromId;
-                    MessageBean messageBean = new MessageBean(conversationId,fromId,lastMsg,lastTime);
+                    HistoryBean historyBean = new HistoryBean(type,revMsg.fromId,targetId,1,lastMsg,lastTime,"","");
+                    MessageBean messageBean = new MessageBean(targetId,revMsg.fromId,lastMsg,lastTime);
 
 
                     new Thread(new Runnable() {

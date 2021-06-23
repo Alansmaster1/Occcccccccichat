@@ -6,12 +6,11 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(indices = [Index(value = ["id"],unique = true)])
+@Entity(indices = [Index(value = ["ownId"],unique = false)],primaryKeys = ["ownId", "targetId"])
 data class ContactItem (
         var name:String
 ) {
-    @PrimaryKey(autoGenerate = true)
-    var id: Long = 0
-
+    var ownId: String = ""
+    var targetId: String = ""
     var nickname: String = name
 }
